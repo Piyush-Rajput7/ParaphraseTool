@@ -39,8 +39,8 @@ const ParaphraseForm = () => {
       return;
     }
 
-    if (inputText.trim().length < 10) {
-      setError("Please enter at least 10 characters");
+    if (inputText.trim().length < 3) {
+      setError("Please enter some text");
       return;
     }
 
@@ -64,7 +64,7 @@ const ParaphraseForm = () => {
     setError("");
   };
 
-  const isFormValid = inputText.trim().length >= 10;
+  const isFormValid = inputText.trim().length >= 3;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -84,7 +84,7 @@ const ParaphraseForm = () => {
                   setInputText(e.target.value);
                   setError("");
                 }}
-                placeholder="Paste or type your text here... (minimum 10 characters)"
+                placeholder="Paste or type your text here..."
                 className="glass-input w-full h-40 p-4 text-white placeholder-white/50 resize-none focus:outline-none focus:scale-102 transition-transform duration-300"
                 maxLength={5000}
               />
