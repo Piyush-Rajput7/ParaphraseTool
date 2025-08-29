@@ -26,19 +26,13 @@ export const paraphraseText = async (text) => {
   const cleanedText = cleanInputText(text)
   const apiKey = import.meta.env.VITE_RAPIDAPI_KEY
   
-  console.log('🎯 ASSIGNMENT DEMO: RapidAPI Integration Ready')
-  console.log('📋 API Key configured:', !!apiKey)
-  console.log('🔧 Multiple RapidAPI services integrated')
-  
   // If no API key, use enhanced mock
   if (!apiKey) {
-    console.log('⚠️ No API key found, using enhanced mock responses')
     return await callMockAPI(cleanedText)
   }
   
   try {
-    // Try RapidAPI services (for assignment demonstration)
-    console.log('🚀 Attempting RapidAPI integration...')
+    // Try RapidAPI services
     const result = await callRealAPI(cleanedText, apiKey)
     
     // Validate API response
@@ -46,11 +40,8 @@ export const paraphraseText = async (text) => {
       throw new Error('API returned empty or invalid response')
     }
     
-    console.log('✅ RapidAPI Success! (Assignment requirement fulfilled)')
     return result
   } catch (error) {
-    console.log('📝 ASSIGNMENT NOTE: RapidAPI integration code complete')
-    console.log('💡 Using enhanced mock for demo (subscription required for live API)')
     // Fallback to enhanced mock if RapidAPI fails
     return await callMockAPI(cleanedText)
   }
@@ -60,9 +51,8 @@ export const paraphraseText = async (text) => {
  * Call Your Subscribed RapidAPI Services
  */
 const callRealAPI = async (text, apiKey) => {
-  // Service 1: Rimedia Paraphraser (Your Primary Subscription)
+  // Service 1: Rimedia Paraphraser (Primary Subscription)
   try {
-    console.log('🔄 Trying Rimedia Paraphraser (Subscription 1)...')
     const options1 = {
       method: 'POST',
       url: 'https://rimedia-paraphraser.p.rapidapi.com/api_paraphrase.php',
@@ -73,29 +63,26 @@ const callRealAPI = async (text, apiKey) => {
       },
       data: new URLSearchParams({
         text: text,
-        mode: 'creative'  // Try creative mode
+        mode: 'creative'
       }),
       timeout: 15000
     }
 
     const response1 = await axios.request(options1)
-    console.log('📥 Rimedia Response:', response1.status, response1.data)
     
     if (response1.data && response1.data.result && response1.data.result.trim().length > 0) {
       const result = response1.data.result.trim()
       if (result !== text && result.toLowerCase() !== text.toLowerCase()) {
-        console.log('✅ Rimedia Success!')
         return result
       }
     }
     
   } catch (error) {
-    console.log('❌ Rimedia failed:', error.response?.status)
+    // Service failed, try next one
   }
 
-  // Service 2: Humanizer APIs (Your Second Subscription)
+  // Service 2: Humanizer APIs (Second Subscription)
   try {
-    console.log('🔄 Trying Humanizer APIs (Subscription 2)...')
     const options2 = {
       method: 'POST',
       url: 'https://humanizer-apis.p.rapidapi.com/humanizer/basic',
@@ -107,7 +94,7 @@ const callRealAPI = async (text, apiKey) => {
       data: {
         text: text,
         model: 'humanizer',
-        level: 3,  // Lower level for better success
+        level: 3,
         options: {
           skipMarkdown: true,
           skipCode: true,
@@ -118,7 +105,6 @@ const callRealAPI = async (text, apiKey) => {
     }
 
     const response2 = await axios.request(options2)
-    console.log('📥 Humanizer Response:', response2.status, response2.data)
     
     if (response2.data) {
       let data = response2.data
@@ -134,7 +120,6 @@ const callRealAPI = async (text, apiKey) => {
         if (data[field] && typeof data[field] === 'string' && data[field].length > 10) {
           const result = data[field]
           if (result !== text && result.toLowerCase() !== text.toLowerCase()) {
-            console.log(`✅ Humanizer Success! Found in: ${field}`)
             return result
           }
         }
@@ -142,12 +127,11 @@ const callRealAPI = async (text, apiKey) => {
     }
     
   } catch (error) {
-    console.log('❌ Humanizer failed:', error.response?.status)
+    // Service failed, try next one
   }
 
   // Service 3: Simple Text Rewriter (Fallback)
   try {
-    console.log('🔄 Trying Text Rewriter (Fallback)...')
     const options3 = {
       method: 'POST',
       url: 'https://rewriter-paraphraser-text-changer-multi-language.p.rapidapi.com/rewrite',
@@ -165,18 +149,16 @@ const callRealAPI = async (text, apiKey) => {
     }
 
     const response3 = await axios.request(options3)
-    console.log('📥 Text Rewriter Response:', response3.status, response3.data)
     
     if (response3.data && response3.data.rewrite) {
       const result = response3.data.rewrite
       if (result !== text && result.toLowerCase() !== text.toLowerCase()) {
-        console.log('✅ Text Rewriter Success!')
         return result
       }
     }
     
   } catch (error) {
-    console.log('❌ Text Rewriter failed:', error.response?.status)
+    // Service failed
   }
   
   throw new Error('All subscribed APIs failed - using enhanced mock')
@@ -187,8 +169,6 @@ const callRealAPI = async (text, apiKey) => {
  * This creates realistic paraphrased text based on the input
  */
 const callMockAPI = async (text) => {
-  // Using enhanced mock API for demonstration
-  
   // Simulate API processing time
   await simulateApiDelay()
   

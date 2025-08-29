@@ -27,57 +27,62 @@ const testCases = [
 
 // Main test function
 export const runAPITests = async () => {
-  console.log('🧪 Starting API Tests...')
+  const results = []
   
   // Test API connection
-  console.log('\n1. Testing API Connection...')
   try {
     const connectionTest = await testAPIConnection()
-    console.log('Connection Test Results:', connectionTest)
+    results.push({ type: 'connection', status: 'success', data: connectionTest })
   } catch (error) {
-    console.error('Connection test failed:', error)
+    results.push({ type: 'connection', status: 'error', error: error.message })
   }
   
   // Test each case
-  console.log('\n2. Testing Different Text Types...')
   for (const testCase of testCases) {
-    console.log(`\n📝 Testing: ${testCase.name}`)
-    console.log(`Input: ${testCase.text.substring(0, 100)}...`)
-    
     try {
       // Test validation
       const isValid = validateText(testCase.text)
-      console.log(`✅ Validation: ${isValid ? 'PASS' : 'FAIL'}`)
-      
-      if (!isValid) continue
-      
-      // Test cleaning
-      const cleaned = cleanInputText(testCase.text)
-      console.log(`🧹 Cleaned: ${cleaned !== testCase.text ? 'MODIFIED' : 'NO CHANGES'}`)
+      if (!isValid) {
+        results.push({ 
+          type: 'test', 
+          name: testCase.name, 
+          status: 'validation_failed' 
+        })
+        continue
+      }
       
       // Test paraphrasing
       const startTime = Date.now()
       const result = await paraphraseText(testCase.text)
       const duration = Date.now() - startTime
       
-      console.log(`⏱️  Duration: ${duration}ms`)
-      console.log(`📤 Output: ${result.substring(0, 100)}...`)
-      console.log(`✅ Status: SUCCESS`)
+      results.push({
+        type: 'test',
+        name: testCase.name,
+        status: 'success',
+        duration,
+        input: testCase.text.substring(0, 100) + '...',
+        output: result.substring(0, 100) + '...'
+      })
       
     } catch (error) {
-      console.error(`❌ Error: ${error.message}`)
+      results.push({
+        type: 'test',
+        name: testCase.name,
+        status: 'error',
+        error: error.message
+      })
     }
   }
   
-  console.log('\n🎉 API Tests Complete!')
+  return results
 }
 
 // Re-export functions from api.js for convenience
 export { testAPIConnection, validateText, cleanInputText } from './services/api.js'
 
-// Make test function available globally
-if (typeof window !== 'undefined') {
+// Make test function available globally in development
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   window.runAPITests = runAPITests
   window.testAPIConnection = testAPIConnection
-  console.log('🔧 Test functions available: window.runAPITests(), window.testAPIConnection()')
 }

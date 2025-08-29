@@ -8,9 +8,9 @@ import { paraphraseText } from "../services/api";
 import { runAPITests, testAPIConnection } from "../test-api.js";
 
 const ParaphraseForm = () => {
-  // Make test functions available in browser console
+  // Make test functions available in browser console for development
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && import.meta.env.DEV) {
       window.runAPITests = runAPITests;
       window.testAPIConnection = testAPIConnection;
       window.testParaphrasing = async () => {
@@ -18,17 +18,11 @@ const ParaphraseForm = () => {
           "This is a test to check if the paraphrasing works correctly.";
         try {
           const result = await paraphraseText(testText);
-          console.log("✅ Test successful:", result);
           return result;
         } catch (error) {
-          console.error("❌ Test failed:", error);
           throw error;
         }
       };
-      console.log("🔧 Debug functions available:");
-      console.log("- window.runAPITests() - Run comprehensive API tests");
-      console.log("- window.testAPIConnection() - Test API connectivity");
-      console.log("- window.testParaphrasing() - Quick paraphrasing test");
     }
   }, []);
   const [inputText, setInputText] = useState("");
