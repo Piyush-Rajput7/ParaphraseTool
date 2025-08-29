@@ -167,11 +167,11 @@ This project is created for the Anslation Internship Assignment.
 
 ## 👨‍💻 Built By
 
-**[Your Name]** for Anslation Internship Assignment
+**Piyush Patil** for Anslation Internship Assignment
 
-- 🌐 Portfolio: [Your Portfolio URL]
-- 💼 LinkedIn: [Your LinkedIn]
-- 📧 Email: [Your Email]
+- 🌐 Portfolio: https://piyushrajput-portfolio.netlify.app/
+- 💼 LinkedIn: https://www.linkedin.com/in/piyush-patil-7a2a261b9/
+- 📧 Email: piyushrajput710@gmail.com
 
 ---
 
